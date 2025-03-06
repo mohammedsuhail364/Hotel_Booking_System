@@ -1,0 +1,17 @@
+[
+  { "id": 1, "name": "Taj Palace", "location": "Delhi", "price": 5000 },
+  { "id": 2, "name": "Oberoi Grand", "location": "Kolkata", "price": 4500 },
+  { "id": 3, "name": "Leela Palace", "location": "Bangalore", "price": 6000 },
+  { "id": 4, "name": "ITC Maurya", "location": "Delhi", "price": 5500 },
+  { "id": 5, "name": "The Park", "location": "Chennai", "price": 4200 },
+  { "id": 6, "name": "JW Marriott", "location": "Mumbai", "price": 7500 },
+  { "id": 7, "name": "Hyatt Regency", "location": "Hyderabad", "price": 5000 },
+  { "id": 8, "name": "Radisson Blu", "location": "Pune", "price": 4800 },
+  { "id": 9, "name": "The Lalit", "location": "Goa", "price": 6700 },
+  { "id": 10, "name": "Trident", "location": "Jaipur", "price": 4600 },
+  { "id": 11, "name": "Vivanta", "location": "Ahmedabad", "price": 5100 },
+  { "id": 12, "name": "Novotel", "location": "Lucknow", "price": 4300 },
+  { "id": 13, "name": "Four Seasons", "location": "Mumbai", "price": 9000 },
+  { "id": 14, "name": "Fairmont", "location": "Jaipur", "price": 7000 },
+  { "id": 15, "name": "Shangri-La", "location": "Delhi", "price": 8500 }
+]
