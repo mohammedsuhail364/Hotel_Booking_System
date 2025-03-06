@@ -5,6 +5,7 @@ import BookingForm from "../components/BookingForm";
 import WebCheckIn from "../components/WebCheckIn";
 import HotelList from "../components/HotelList";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -16,65 +17,78 @@ const BookHotel = () => {
   const [bookings, setBookings] = useState([]);
   const token = sessionStorage.getItem("token") ? JSON.parse(sessionStorage.getItem("token")) : null;
   const id = sessionStorage.getItem("id");
+  const navigate = useNavigate();
 
-  // Fetch Bookings
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    } else {
+      fetchBookings();
+    }
+  }, []);
+
   const fetchBookings = async () => {
-    if (id) {
-      try {
-        const res = await getUserBookings(id);
-        setBookings(res.data);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      }
+    if (!id) return;
+    try {
+      const res = await getUserBookings(id);
+      setBookings(res.data);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, [user]);
-
   const handleBooking = async (data) => {
-    if (!id) {
+    if (!id || !token) {
       alert("Please log in first!");
       return;
     }
     try {
       await bookHotel({ ...data, userId: id }, token);
+      alert("Hotel booked successfully!");
       fetchBookings();
     } catch (error) {
       console.error("Error booking hotel:", error);
+      alert("Booking failed. Try again.");
     }
   };
 
   const handleCheckIn = async (aadhaarNumbers) => {
-    // console.log(aadhaarNumbers);
-    
-    // const matchingBooking = bookings.find((b) =>
-    //   JSON.stringify(b) === JSON.stringify(aadhaarNumbers)
-    // );
-
-    // if (!matchingBooking) {
-    //   alert("No matching booking found for these Aadhaar numbers.");
-    //   return;
-    // }
-
+    if (!id || !token) {
+      alert("Please log in first!");
+      return;
+    }
     try {
-      const res=await checkInHotel(id, token);
-      if (res.data.success){
+      const res = await checkInHotel(id, { aadhaarNumbers }, token);
+      if (res.data.success) {
         alert("Web check-in successful!");
         fetchBookings();
+      } else {
+        alert("Check-in failed. Ensure Aadhaar numbers are valid.");
       }
     } catch (error) {
       console.error("Error during check-in:", error);
+      alert("Check-in failed. Try again.");
     }
   };
-  console.log(bookings);
-  
+
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("id");
+      navigate("/");
+    }
+  };
+
   return (
     <motion.div initial="hidden" animate="visible" exit={{ opacity: 0 }} className="container mx-auto p-6">
-      <motion.h1 variants={fadeIn} className="text-4xl font-extrabold text-blue-700 text-center mb-6">
-        Book Your Dream Hotel 🌟
-      </motion.h1>
+      <div className="flex justify-between items-center mb-6">
+        <motion.h1 variants={fadeIn} className="text-4xl font-extrabold text-blue-700">
+          Book Your Dream Hotel 🌟
+        </motion.h1>
+        <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition">
+          Logout
+        </button>
+      </div>
 
       <motion.div variants={fadeIn} className="mt-4">
         <HotelList />

@@ -8,30 +8,29 @@ router.post("/book", async (req, res) => {
   const { userId, hotelName, checkIn, aadhaar } = req.body;
 
   if (!userId) {
-    return res.status(400).json({ error: "User ID is required." });
+      return res.status(400).json({ error: "User ID is required." });
   }
 
   try {
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
+      // Check if user exists
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+          return res.status(404).json({ error: "User not found." });
+      }
 
-    // Create booking
-    const booking = await prisma.booking.create({
-      data: {
-        user: { connect: { id: userId } },
-        hotelName,
-        checkIn: new Date(checkIn),
-        aadhaar,
-        checkedIn: false, // New field to track check-in status
-      },
-    });
+      // Create booking
+      const booking = await prisma.booking.create({
+          data: {
+              user: { connect: { id: userId } }, // Ensures user exists
+              hotelName,
+              checkIn: new Date(checkIn),
+              aadhaar,
+          },
+      });
 
-    res.json(booking);
+      res.json(booking);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
   }
 });
 
